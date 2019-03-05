@@ -6,7 +6,7 @@ from authlib.flask.oauth2.sqla import (
     create_bearer_token_validator,
 )
 from authlib.specs.rfc6749 import grants
-from authlib.specs.oidc import oidc_grants
+from authlib.specs.oidc import grants as oidc_grants
 
 from werkzeug.security import gen_salt
 from .models import db, User
