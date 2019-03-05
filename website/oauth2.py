@@ -74,6 +74,7 @@ def config_oauth(app):
     authorization.register_grant(AuthorizationCodeGrant)
     authorization.register_grant(PasswordGrant)
     authorization.register_grant(RefreshTokenGrant)
+    authorization.register_grant(grants.OpenIDImplicitGrant)
 
     # support revocation
     revocation_cls = create_revocation_endpoint(db.session, OAuth2Token)
