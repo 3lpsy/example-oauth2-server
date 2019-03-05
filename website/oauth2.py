@@ -6,6 +6,8 @@ from authlib.flask.oauth2.sqla import (
     create_bearer_token_validator,
 )
 from authlib.specs.rfc6749 import grants
+from authlib.specs.oidc import oidc_grants
+
 from werkzeug.security import gen_salt
 from .models import db, User
 from .models import OAuth2Client, OAuth2AuthorizationCode, OAuth2Token
@@ -74,7 +76,7 @@ def config_oauth(app):
     authorization.register_grant(AuthorizationCodeGrant)
     authorization.register_grant(PasswordGrant)
     authorization.register_grant(RefreshTokenGrant)
-    authorization.register_grant(grants.OpenIDImplicitGrant)
+    authorization.register_grant(oidc_grants.OpenIDImplicitGrant)
 
     # support revocation
     revocation_cls = create_revocation_endpoint(db.session, OAuth2Token)
