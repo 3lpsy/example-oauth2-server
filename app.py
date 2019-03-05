@@ -1,5 +1,5 @@
 from website.app import create_app
-from pathblib import Path
+from pathlib import Path
 
 app = create_app({
     'SECRET_KEY': 'secret',
