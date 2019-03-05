@@ -1,5 +1,5 @@
 from website.app import create_app
-
+from pathblib import Path
 
 app = create_app({
     'SECRET_KEY': 'secret',
@@ -8,7 +8,9 @@ app = create_app({
     'OAUTH2_JWT_ALG': 'RS256',
     'OAUTH2_JWT_KEY_PATH': Path('./jwt.pem').resolve(),
     'SQLALCHEMY_TRACK_MODIFICATIONS': False,
-    'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.sqlite',
+    'OAUTH2_JWT_ISS': 'example',
+    'OAUTH2_JWT_EXP': 3600,
+    'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.sqlite'
 })
 
 
