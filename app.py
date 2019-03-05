@@ -6,7 +6,7 @@ app = create_app({
     'OAUTH2_REFRESH_TOKEN_GENERATOR': True,
     'OAUTH2_JWT_ENABLED': True,
     'OAUTH2_JWT_ALG': 'RS256',
-    'OAUTH2_JWT_KEY_PATH': Path('./jwt.pem').resolve(),
+    'OAUTH2_JWT_KEY_PATH': str(Path('./jwt.pem').resolve()),
     'SQLALCHEMY_TRACK_MODIFICATIONS': False,
     'OAUTH2_JWT_ISS': 'example',
     'OAUTH2_JWT_EXP': 3600,
