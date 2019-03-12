@@ -12,14 +12,14 @@ def create_parser():
     run_parser = subparsers.add_parser('run', help='run server')
     run_parser.add_argument('--host', type=str, required=True, default="127.0.0.1", help="server host")
     run_parser.add_argument('--port', type=int, required=True, default=5555, help="server port")
-    run_parser.add_argument('--debug', type=bool, required=True, default=False, help="server debug mode")
+    run_parser.add_argument('--debug', action="store_true", required=True, default=False, help="server debug mode")
 
-    run_parser.add_argument('--cert', type=int, required=False, help="ssl certificate")
-    run_parser.add_argument('--cert-key', type=int, required=False, help="ssl private key")
+    run_parser.add_argument('--cert', type=str, required=False, help="ssl certificate")
+    run_parser.add_argument('--cert-key', type=str, required=False, help="ssl private key")
     db_parser = subparsers.add_parser('initdb', help='initialize db')
     urls_parser = subparsers.add_parser('urls', help='initialize db')
     return parser
-    
+
 if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_args()
