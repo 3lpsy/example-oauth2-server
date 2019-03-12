@@ -15,7 +15,7 @@ from .models import OAuth2Client, OAuth2AuthorizationCode, OAuth2Token
 
 def validate_nonce(nonce, request):
     print("validate_nonce: skipping")
-    return True
+    # return False
 
 class OpenIDCodeGrant(oidc_grants.OpenIDCodeGrant):
     def create_authorization_code(self, client, grant_user, request):
