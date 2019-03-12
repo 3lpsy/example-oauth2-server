@@ -13,6 +13,9 @@ from werkzeug.security import gen_salt
 from .models import db, User
 from .models import OAuth2Client, OAuth2AuthorizationCode, OAuth2Token
 
+def validate_nonce(nonce, request):
+    print("validate_nonce: skipping")
+    return True
 
 class OpenIDCodeGrant(oidc_grants.OpenIDCodeGrant):
     def create_authorization_code(self, client, grant_user, request):
@@ -49,6 +52,9 @@ class OpenIDCodeGrant(oidc_grants.OpenIDCodeGrant):
         print("OpenIDCodeGrant: Authenticating user", authorization_code)
         return User.query.get(authorization_code.user_id)
 
+    def exists_nonce(self, nonce, request):
+        print("OpenIDImplicitGrant: Validating nonce", nonce)
+        return validate_nonce(nonce, request)
 
 class PasswordGrant(grants.ResourceOwnerPasswordCredentialsGrant):
     def authenticate_user(self, username, password):
@@ -70,6 +76,11 @@ class RefreshTokenGrant(grants.RefreshTokenGrant):
         return User.query.get(credential.user_id)
 
 
+class OpenIDImplicitGrant(oidc_grants.OpenIDImplicitGrant):
+    def exists_nonce(self, nonce, request):
+        print("OpenIDImplicitGrant: Validating nonce", nonce)
+        return validate_nonce(nonce, request)
+
 query_client = create_query_client_func(db.session, OAuth2Client)
 save_token = create_save_token_func(db.session, OAuth2Token)
 authorization = AuthorizationServer(
@@ -89,7 +100,7 @@ def config_oauth(app):
     authorization.register_grant(RefreshTokenGrant)
 
     authorization.register_grant(OpenIDCodeGrant)
-    authorization.register_grant(oidc_grants.OpenIDImplicitGrant)
+    authorization.register_grant(OpenIDImplicitGrant)
 
     # support revocation
     revocation_cls = create_revocation_endpoint(db.session, OAuth2Token)
