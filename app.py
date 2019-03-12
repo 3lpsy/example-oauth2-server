@@ -1,17 +1,20 @@
 from website.app import create_app
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 app = create_app({
-    'SECRET_KEY': 'secret',
-    'OAUTH2_REFRESH_TOKEN_GENERATOR': True,
-    'OAUTH2_JWT_ENABLED': True,
-    'OAUTH2_JWT_ALG': 'RS256',
-    'OAUTH2_JWT_KEY_PATH': str(Path('./jwt.pem').resolve()),
-    'OAUTH2_JWT_PUBLIC_KEY_PATH': str(Path('./jwt.pub').resolve()),
-    'SQLALCHEMY_TRACK_MODIFICATIONS': False,
-    'OAUTH2_JWT_ISS': 'http://example',
-    'OAUTH2_JWT_EXP': 3600,
-    'SQLALCHEMY_DATABASE_URI': 'sqlite:///db.sqlite'
+    'SECRET_KEY': os.getenv('SECRET_KEY'),
+    'OAUTH2_REFRESH_TOKEN_GENERATOR': os.getenv('OAUTH2_REFRESH_TOKEN_GENERATOR') == "1",
+    'OAUTH2_JWT_ENABLED': os.getenv('OAUTH2_JWT_ENABLED') == "1",
+    'OAUTH2_JWT_ALG': os.getenv('OAUTH2_JWT_ALG'),
+    'OAUTH2_JWT_KEY_PATH': str(Path(os.getenv('OAUTH2_JWT_KEY_PATH')).resolve()),
+    'OAUTH2_JWT_PUBLIC_KEY_PATH': str(Path(os.getenv('OAUTH2_JWT_PUBLIC_KEY_PATH')).resolve()),
+    'SQLALCHEMY_TRACK_MODIFICATIONS': os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS') == "1",
+    'OAUTH2_JWT_ISS': os.getenv('OAUTH2_JWT_ISS'),
+    'OAUTH2_JWT_EXP': os.getenv('OAUTH2_JWT_EXP'),
+    'SQLALCHEMY_DATABASE_URI': os.getenv('SQLALCHEMY_DATABASE_URI')
 })
 
 
