@@ -4,6 +4,7 @@ from authlib.flask.oauth2.sqla import (
     create_save_token_func,
     create_revocation_endpoint,
     create_bearer_token_validator,
+
 )
 from authlib.specs.rfc6749 import grants
 from authlib.specs.oidc import grants as oidc_grants
@@ -13,15 +14,17 @@ from .models import db, User
 from .models import OAuth2Client, OAuth2AuthorizationCode, OAuth2Token
 
 
-class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
-    def create_authorization_code(self, client, user, request):
-        code = gen_salt(48)
+class OpenIDCodeGrant(oidc_grants.OpenIDCodeGrant):
+    def create_authorization_code(self, client, grant_user, request):
+        code = generate_token(48)
+        nonce = request.data.get('nonce')
         item = OAuth2AuthorizationCode(
             code=code,
             client_id=client.client_id,
             redirect_uri=request.redirect_uri,
             scope=request.scope,
-            user_id=user.id,
+            nonce=nonce,
+            user_id=grant_user.get_user_id(),
         )
         db.session.add(item)
         db.session.commit()
@@ -73,9 +76,10 @@ def config_oauth(app):
     # support all grants
     authorization.register_grant(grants.ImplicitGrant)
     authorization.register_grant(grants.ClientCredentialsGrant)
-    authorization.register_grant(AuthorizationCodeGrant)
     authorization.register_grant(PasswordGrant)
     authorization.register_grant(RefreshTokenGrant)
+
+    authorization.register_grant(OpenIDCodeGrant)
     authorization.register_grant(oidc_grants.OpenIDImplicitGrant)
 
     # support revocation

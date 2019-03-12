@@ -1,2 +1,8 @@
 *.sqlite
 *.pyc
+venv
+
+*.pem
+!jwt.pem
+*.pub
+!jwt.pub

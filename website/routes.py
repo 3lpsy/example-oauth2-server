@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session
+from flask import Blueprint, request, session, current_app, url_for
 from flask import render_template, redirect, jsonify
 from werkzeug.security import gen_salt
 from authlib.flask.oauth2 import current_token
@@ -61,6 +61,7 @@ def create_client():
     return redirect('/')
 
 
+
 @bp.route('/oauth/authorize', methods=['GET', 'POST'])
 def authorize():
     user = current_user()
@@ -90,8 +91,25 @@ def revoke_token():
     return authorization.create_endpoint_response('revocation')
 
 
+@bp.route('/oauth/jwks.json', methods=['POST'])
+def jwks_json():
+    jwk = JWK(algorithms=JWK_ALGORITHMS)
+    public_key_path = current_app.config.get('OAUTH2_JWT_PUBLIC_KEY_PATH')
+    with open(public_key_path, 'r') as f:
+        public_key = f.read()
+    return jwk.dumps(public_key, kty='RSA')
+
+
 @bp.route('/api/me')
 @require_oauth('profile')
 def api_me():
     user = current_token.user
     return jsonify(id=user.id, username=user.username)
+
+@bp.route('/.well_known/openid-configuration')
+def openid_configuration():
+    return jsonify({
+        'authorization_endpoint': url_for('website.routes.authorize', _external=True, _scheme='https'),
+        'jwks_uri': url_for('website.routes.jwks_json', _external=True, _scheme='https'),
+        'issuer': current_app.config.get('OAUTH2_JWT_ISS')
+    })
