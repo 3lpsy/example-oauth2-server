@@ -91,8 +91,10 @@ def authorize():
     else:
         grant_user = None
     print("Creating authorization request for grant:", grant_user)
-    return authorization.create_authorization_response(grant_user=grant_user)
-
+    grant = authorization.create_authorization_response(grant_user=grant_user)
+    print('Grant created', grant)
+    print('Grant class: ', grant.__class__.__name__)
+    return grant
 
 @bp.route('/oauth/token', methods=['POST'])
 def issue_token():
