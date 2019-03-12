@@ -5,6 +5,8 @@ from authlib.flask.oauth2.sqla import (
     OAuth2AuthorizationCodeMixin,
     OAuth2TokenMixin,
 )
+from authlib.specs.oidc import UserInfo
+
 
 db = SQLAlchemy()
 
@@ -22,6 +24,9 @@ class User(db.Model):
     def check_password(self, password):
         return password == 'valid'
 
+    def generate_user_info(self, scopes):
+        profile = {'sub': str(self.id), 'name': self.username}
+        return UserInfo(profile)
 
 class OAuth2Client(db.Model, OAuth2ClientMixin):
     __tablename__ = 'oauth2_client'
