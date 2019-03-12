@@ -12,7 +12,7 @@ def create_parser():
     run_parser = subparsers.add_parser('run', help='run server')
     run_parser.add_argument('--host', type=str, required=True, default="127.0.0.1", help="server host")
     run_parser.add_argument('--port', type=int, required=True, default=5555, help="server port")
-    run_parser.add_argument('--debug', action="store_true", required=True, default=False, help="server debug mode")
+    run_parser.add_argument('--debug', action="store_true", default=False, help="server debug mode")
 
     run_parser.add_argument('--cert', type=str, required=False, help="ssl certificate")
     run_parser.add_argument('--cert-key', type=str, required=False, help="ssl private key")

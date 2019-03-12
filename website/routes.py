@@ -91,7 +91,7 @@ def revoke_token():
     return authorization.create_endpoint_response('revocation')
 
 
-@bp.route('/oauth/jwks.json', methods=['POST'])
+@bp.route('/oauth/jwks.json', methods=['GET'])
 def jwks_json():
     jwk = JWK(algorithms=JWK_ALGORITHMS)
     public_key_path = current_app.config.get('OAUTH2_JWT_PUBLIC_KEY_PATH')
