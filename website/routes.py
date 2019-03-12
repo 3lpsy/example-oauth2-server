@@ -39,6 +39,8 @@ def home():
 
 @bp.route('/logout')
 def logout():
+    print("Logging out")
+
     del session['id']
     return redirect('/')
 
@@ -66,24 +68,35 @@ def create_client():
 @bp.route('/oauth/authorize', methods=['GET', 'POST'])
 def authorize():
     user = current_user()
+    print("Current user", user)
     if request.method == 'GET':
         try:
+            print("Validating consent request for end user:", user)
             grant = authorization.validate_consent_request(end_user=user)
         except OAuth2Error as error:
+            print("Error when valdiating consent request for end user:", error)
+            print('Error class:', error.__class__.__name__)
+            print('Error description:', error.description)
+            print('Error uri:', error.uri)
+            print('Error:', error.error)
             return error.error
         return render_template('authorize.html', user=user, grant=grant)
+    print("Receieved post request to authorize:")
     if not user and 'username' in request.form:
         username = request.form.get('username')
+        print("Username found in form:", username)
         user = User.query.filter_by(username=username).first()
     if request.form['confirm']:
         grant_user = user
     else:
         grant_user = None
+    print("Creating authorization request for grant:", grant_user)
     return authorization.create_authorization_response(grant_user=grant_user)
 
 
 @bp.route('/oauth/token', methods=['POST'])
 def issue_token():
+    print("Issuing token response")
     return authorization.create_token_response()
 
 

@@ -16,6 +16,7 @@ from .models import OAuth2Client, OAuth2AuthorizationCode, OAuth2Token
 
 class OpenIDCodeGrant(oidc_grants.OpenIDCodeGrant):
     def create_authorization_code(self, client, grant_user, request):
+        print("OpenIDCodeGrant: Creating authorization code")
         code = generate_token(48)
         nonce = request.data.get('nonce')
         item = OAuth2AuthorizationCode(
@@ -26,26 +27,32 @@ class OpenIDCodeGrant(oidc_grants.OpenIDCodeGrant):
             nonce=nonce,
             user_id=grant_user.get_user_id(),
         )
+        print("OpenIDCodeGrant: Saving OAuth2AuthorizationCode")
         db.session.add(item)
         db.session.commit()
         return code
 
     def parse_authorization_code(self, code, client):
+        print("OpenIDCodeGrant: Parsing Authorization code", code)
+        print("OpenIDCodeGrant: Parsing Authorization client", client)
         item = OAuth2AuthorizationCode.query.filter_by(
             code=code, client_id=client.client_id).first()
         if item and not item.is_expired():
             return item
 
     def delete_authorization_code(self, authorization_code):
+        print("OpenIDCodeGrant: Deleting Authorization code", authorization_code)
         db.session.delete(authorization_code)
         db.session.commit()
 
     def authenticate_user(self, authorization_code):
+        print("OpenIDCodeGrant: Authenticating user", authorization_code)
         return User.query.get(authorization_code.user_id)
 
 
 class PasswordGrant(grants.ResourceOwnerPasswordCredentialsGrant):
     def authenticate_user(self, username, password):
+        print("PasswordGrant: Authenticating user with password", username)
         user = User.query.filter_by(username=username).first()
         if user.check_password(password):
             return user
@@ -53,11 +60,13 @@ class PasswordGrant(grants.ResourceOwnerPasswordCredentialsGrant):
 
 class RefreshTokenGrant(grants.RefreshTokenGrant):
     def authenticate_refresh_token(self, refresh_token):
+        print("RefreshTokenGrant: Authenticating refresh token", refresh_token)
         item = OAuth2Token.query.filter_by(refresh_token=refresh_token).first()
         if item and not item.is_refresh_token_expired():
             return item
 
     def authenticate_user(self, credential):
+        print("RefreshTokenGrant: Authenticating user", credential)
         return User.query.get(credential.user_id)
 
 
