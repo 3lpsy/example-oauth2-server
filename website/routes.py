@@ -5,7 +5,8 @@ from authlib.flask.oauth2 import current_token
 from authlib.specs.rfc6749 import OAuth2Error
 from .models import db, User, OAuth2Client
 from .oauth2 import authorization, require_oauth
-
+from authlib.jose import JWK
+from authlib.jose import JWK_ALGORITHMS
 
 bp = Blueprint(__name__, 'home')
 
