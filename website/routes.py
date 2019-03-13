@@ -91,7 +91,7 @@ def authorize():
     else:
         grant_user = None
     print("Creating authorization request for grant:", grant_user)
-    
+
     grant = authorization.create_authorization_response(grant_user=grant_user)
     print('Grant created', grant)
     print('Grant class: ', grant.__class__.__name__)
@@ -114,7 +114,7 @@ def jwks_json():
     public_key_path = current_app.config.get('OAUTH2_JWT_PUBLIC_KEY_PATH')
     with open(public_key_path, 'r') as f:
         public_key = f.read()
-    return jsonify(jwk.dumps(public_key, kty='RSA'))
+    return jsonify({'keys' [jwk.dumps(public_key, kty='RSA')]})
 
 
 @bp.route('/api/me')
