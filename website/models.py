@@ -25,7 +25,12 @@ class User(db.Model):
         return password == 'valid'
 
     def generate_user_info(self, scopes):
-        profile = {'sub': str(self.id), 'name': self.username}
+        profile = {
+            'sub': str(self.id),
+            'name': self.username,
+            'username': self.username,
+            'email': self.username
+        }
         return UserInfo(profile)
 
 class OAuth2Client(db.Model, OAuth2ClientMixin):
