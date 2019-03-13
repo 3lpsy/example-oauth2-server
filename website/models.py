@@ -71,3 +71,10 @@ class OAuth2Token(db.Model, OAuth2TokenMixin):
     def is_refresh_token_expired(self):
         expires_at = self.issued_at + self.expires_in * 2
         return expires_at < time.time()
+
+
+def exists_nonce(nonce, req):
+    exists = OAuth2AuthorizationCode.query.filter_by(
+        client_id=req.client_id, nonce=nonce
+    ).first()
+    return bool(exists)

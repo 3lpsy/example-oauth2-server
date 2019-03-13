@@ -10,12 +10,9 @@ from authlib.specs.rfc6749 import grants
 from authlib.specs.oidc import grants as oidc_grants
 
 from werkzeug.security import gen_salt
-from .models import db, User
+from .models import db, User, exists_nonce
 from .models import OAuth2Client, OAuth2AuthorizationCode, OAuth2Token
 
-def validate_nonce(nonce, request):
-    print("validate_nonce: skipping")
-    # return False
 
 class OpenIDCodeGrant(oidc_grants.OpenIDCodeGrant):
     def create_authorization_code(self, client, grant_user, request):
@@ -54,7 +51,7 @@ class OpenIDCodeGrant(oidc_grants.OpenIDCodeGrant):
 
     def exists_nonce(self, nonce, request):
         print("OpenIDImplicitGrant: Validating nonce", nonce)
-        return validate_nonce(nonce, request)
+        return exists_nonce(nonce, request)
 
 class PasswordGrant(grants.ResourceOwnerPasswordCredentialsGrant):
     def authenticate_user(self, username, password):
@@ -79,7 +76,7 @@ class RefreshTokenGrant(grants.RefreshTokenGrant):
 class OpenIDImplicitGrant(oidc_grants.OpenIDImplicitGrant):
     def exists_nonce(self, nonce, request):
         print("OpenIDImplicitGrant: Validating nonce", nonce)
-        return validate_nonce(nonce, request)
+        return exists_nonce(nonce, request)
 
 query_client = create_query_client_func(db.session, OAuth2Client)
 save_token = create_save_token_func(db.session, OAuth2Token)
