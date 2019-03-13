@@ -91,8 +91,7 @@ def authorize():
     else:
         grant_user = None
     print("Creating authorization request for grant:", grant_user)
-    new_query_string = request.query_string.decode() + '&response_mode=query'
-    request.query_string = new_query_string.encode()
+    
     grant = authorization.create_authorization_response(grant_user=grant_user)
     print('Grant created', grant)
     print('Grant class: ', grant.__class__.__name__)
