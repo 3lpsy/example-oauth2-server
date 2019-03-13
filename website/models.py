@@ -25,6 +25,8 @@ class User(db.Model):
         return password == 'valid'
 
     def generate_user_info(self, scopes):
+        print("Generating User Info:", str(self))
+        print("Generating User Info Scopes:", scopes)
         profile = {
             'sub': str(self.id),
             'name': self.username,
