@@ -4,6 +4,7 @@ from authlib.flask.oauth2.sqla import (
     OAuth2ClientMixin,
     OAuth2AuthorizationCodeMixin,
     OAuth2TokenMixin,
+    OIDCAuthorizationCodeMixin,
 )
 from authlib.specs.oidc import UserInfo
 
@@ -51,7 +52,7 @@ class OAuth2Client(db.Model, OAuth2ClientMixin):
     user = db.relationship('User')
 
 
-class OAuth2AuthorizationCode(db.Model, OAuth2AuthorizationCodeMixin):
+class OAuth2AuthorizationCode(db.Model, OIDCAuthorizationCodeMixin):
     __tablename__ = 'oauth2_code'
 
     id = db.Column(db.Integer, primary_key=True)
