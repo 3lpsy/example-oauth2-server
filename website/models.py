@@ -31,7 +31,14 @@ class User(db.Model):
             'sub': str(self.id),
             'name': self.username,
             'username': self.username,
-            'email': self.username
+            'email': self.username,
+            'email_verified': True,
+            'profile': self.username,
+            'family_name': self.username,
+            'given_name': self.username,
+            'middle_name': self.username,
+            'nickname': self.username,
+            'picture': self.username
         }
         return UserInfo(profile)
 
